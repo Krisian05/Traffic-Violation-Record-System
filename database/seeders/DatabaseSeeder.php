@@ -38,7 +38,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            ViolationType::create($type);
+            ViolationType::updateOrCreate(
+                ['name' => $type['name']],
+                $type
+            );
         }
     }
 }
