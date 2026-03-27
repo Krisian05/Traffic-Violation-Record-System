@@ -104,7 +104,7 @@ class ViolatorController extends Controller
             : null;
 
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('violator-photos', 'public');
+            $data['photo'] = $request->file('photo')->store('violator-photos', uploads_disk());
         }
 
         $violator = Violator::create($data);
@@ -205,9 +205,9 @@ class ViolatorController extends Controller
 
         if ($request->hasFile('photo')) {
             if ($violator->photo) {
-                Storage::disk('public')->delete($violator->photo);
+                Storage::disk(uploads_disk())->delete($violator->photo);
             }
-            $data['photo'] = $request->file('photo')->store('violator-photos', 'public');
+            $data['photo'] = $request->file('photo')->store('violator-photos', uploads_disk());
         } else {
             unset($data['photo']);
         }
@@ -221,7 +221,7 @@ class ViolatorController extends Controller
     public function destroy(Violator $violator)
     {
         if ($violator->photo) {
-            Storage::disk('public')->delete($violator->photo);
+            Storage::disk(uploads_disk())->delete($violator->photo);
         }
 
         $violator->delete();

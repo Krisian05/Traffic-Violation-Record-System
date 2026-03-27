@@ -296,7 +296,7 @@
     <div class="profile-row">
         <div class="profile-photo">
             @if($violator->photo)
-                <img src="{{ asset('storage/' . $violator->photo) }}" alt="Photo">
+                <img src="{{ uploaded_file_url($violator->photo) }}" alt="Photo">
             @else
                 <span class="profile-photo-placeholder">&#9786;</span>
             @endif

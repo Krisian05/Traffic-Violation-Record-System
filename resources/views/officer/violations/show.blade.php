@@ -138,10 +138,10 @@
 <div class="mob-card">
     <div class="mob-section-title">Citation Ticket</div>
     <div class="mob-card-body pt-1 text-center">
-        <img src="{{ asset('storage/' . $violation->citation_ticket_photo) }}"
+        <img src="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
              alt="Citation Ticket"
              class="mob-photo-thumb"
-             data-full="{{ asset('storage/' . $violation->citation_ticket_photo) }}"
+             data-full="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
              data-caption="Citation Ticket — {{ $violation->violationType->name ?? 'Violation' }}"
              style="max-width:100%;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1);cursor:zoom-in;">
         <div style="font-size:.7rem;color:#94a3b8;text-align:center;margin-top:.5rem;"><i class="ph ph-magnifying-glass-plus me-1"></i>Tap to enlarge</div>
@@ -157,10 +157,10 @@
         <div class="row g-2">
             @foreach($violation->vehiclePhotos as $photo)
             <div class="col-6">
-                <img src="{{ asset('storage/' . $photo->photo) }}"
+                <img src="{{ uploaded_file_url($photo->photo) }}"
                      alt="Vehicle photo"
                      class="mob-photo-thumb"
-                     data-full="{{ asset('storage/' . $photo->photo) }}"
+                     data-full="{{ uploaded_file_url($photo->photo) }}"
                      data-caption="Vehicle Photo"
                      style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:zoom-in;">
             </div>

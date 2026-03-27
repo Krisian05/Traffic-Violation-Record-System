@@ -40,8 +40,8 @@
         <div class="d-flex flex-wrap gap-2">
             @foreach($violation->vehiclePhotos as $photo)
             <div class="position-relative">
-                <img src="{{ asset('storage/' . $photo->photo) }}"
-                     data-lightbox="{{ asset('storage/' . $photo->photo) }}"
+                <img src="{{ uploaded_file_url($photo->photo) }}"
+                     data-lightbox="{{ uploaded_file_url($photo->photo) }}"
                      data-caption="Violation #{{ $violation->id }}"
                      style="height:100px;width:140px;object-fit:cover;border-radius:6px;border:2px solid #fde68a;cursor:pointer;"
                      alt="vehicle photo">
@@ -378,7 +378,7 @@
                         <label class="form-label">Citation Ticket Photo</label>
                         @if($violation->citation_ticket_photo)
                             <div class="mb-2" id="currentCitationWrap">
-                                <img src="{{ Storage::url($violation->citation_ticket_photo) }}"
+                                <img src="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
                                      alt="Current citation ticket"
                                      style="max-width:100%;max-height:160px;object-fit:contain;border-radius:8px;border:2px solid #fcd34d;">
                                 <div class="d-flex align-items-center gap-2 mt-1">
@@ -467,7 +467,7 @@
                         <label class="form-label">Receipt Photo</label>
                         @if($violation->receipt_photo)
                             <div class="mb-2" id="currentReceiptWrap">
-                                <img src="{{ asset('storage/' . $violation->receipt_photo) }}"
+                                <img src="{{ uploaded_file_url($violation->receipt_photo) }}"
                                      alt="Current receipt"
                                      style="max-width:100%;max-height:160px;object-fit:contain;border-radius:8px;border:2px solid #bbf7d0;">
                                 <div class="d-flex align-items-center gap-2 mt-1">

@@ -154,9 +154,9 @@
             <div class="card-body p-4">
                 <div class="d-flex flex-wrap gap-3">
                     @foreach($vehicle->photos as $photo)
-                    <img src="{{ asset('storage/' . $photo->photo) }}"
+                    <img src="{{ uploaded_file_url($photo->photo) }}"
                          alt="Vehicle photo"
-                         data-lightbox="{{ asset('storage/' . $photo->photo) }}"
+                         data-lightbox="{{ uploaded_file_url($photo->photo) }}"
                          data-caption="{{ $vehicle->plate_number }} — Photo {{ $loop->iteration }}"
                          style="height:120px;width:160px;object-fit:cover;border-radius:10px;border:2px solid #bae6fd;cursor:pointer;transition:transform .15s,box-shadow .15s;"
                          onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 6px 20px rgba(2,132,199,.25)'"

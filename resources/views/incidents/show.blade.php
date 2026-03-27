@@ -168,13 +168,13 @@
                     {{-- Motorist header row --}}
                     <div class="d-flex align-items-center gap-3 px-4 py-3" style="background:#fafaf9;border-bottom:1px solid #f5f0e8;">
                         @if($m->violator?->photo)
-                            <img src="{{ Storage::url($m->violator->photo) }}"
-                                 data-lightbox="{{ Storage::url($m->violator->photo) }}"
+                            <img src="{{ uploaded_file_url($m->violator->photo) }}"
+                                 data-lightbox="{{ uploaded_file_url($m->violator->photo) }}"
                                  data-caption="{{ $m->violator->full_name }} — Profile Photo"
                                  style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;flex-shrink:0;cursor:zoom-in;" alt="">
                         @elseif($m->motorist_photo)
-                            <img src="{{ Storage::url($m->motorist_photo) }}"
-                                 data-lightbox="{{ Storage::url($m->motorist_photo) }}"
+                            <img src="{{ uploaded_file_url($m->motorist_photo) }}"
+                                 data-lightbox="{{ uploaded_file_url($m->motorist_photo) }}"
                                  data-caption="{{ $m->motorist_name ?? 'Motorist ' . ($idx + 1) }} — ID Photo"
                                  style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;flex-shrink:0;cursor:zoom-in;" alt="ID photo">
                         @else
@@ -289,8 +289,8 @@
                             <div style="width:130px;flex-shrink:0;font-size:.8rem;color:#a8a29e;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;">Vehicle Photos</div>
                             <div class="d-flex flex-wrap gap-2">
                                 @foreach($m->vehicle_photo as $vp)
-                                    <img src="{{ Storage::url($vp) }}"
-                                         data-lightbox="{{ Storage::url($vp) }}"
+                                    <img src="{{ uploaded_file_url($vp) }}"
+                                         data-lightbox="{{ uploaded_file_url($vp) }}"
                                          data-caption="Vehicle — Motorist {{ $idx + 1 }}"
                                          style="height:80px;width:110px;object-fit:cover;border-radius:8px;border:2px solid #fde68a;cursor:pointer;transition:transform .15s;"
                                          onmouseover="this.style.transform='scale(1.03)'"
@@ -340,16 +340,16 @@
                     <div class="col-md-4 col-sm-6">
                         <div style="border:1px solid #ede8df;border-radius:10px;overflow:hidden;">
                             @if($media->isImage())
-                                <a href="{{ Storage::url($media->file_path) }}"
-                                   data-lightbox="{{ Storage::url($media->file_path) }}"
+                                <a href="{{ uploaded_file_url($media->file_path) }}"
+                                   data-lightbox="{{ uploaded_file_url($media->file_path) }}"
                                    data-caption="{{ $media->caption }}">
-                                    <img src="{{ Storage::url($media->file_path) }}" alt="{{ $media->caption }}"
+                                    <img src="{{ uploaded_file_url($media->file_path) }}" alt="{{ $media->caption }}"
                                          style="width:100%;height:120px;object-fit:cover;display:block;cursor:pointer;"
                                          onmouseover="this.style.opacity='.85'"
                                          onmouseout="this.style.opacity='1'">
                                 </a>
                             @else
-                                <a href="{{ Storage::url($media->file_path) }}" target="_blank" class="text-decoration-none"
+                                <a href="{{ uploaded_file_url($media->file_path) }}" target="_blank" class="text-decoration-none"
                                    style="display:flex;align-items:center;justify-content:center;height:120px;background:#f8fafc;">
                                     <div class="text-center">
                                         <i class="bi bi-file-earmark-pdf-fill text-danger" style="font-size:2.2rem;"></i>

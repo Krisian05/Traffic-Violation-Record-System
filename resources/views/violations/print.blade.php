@@ -453,17 +453,17 @@
         <div class="photo-strip">
             @if($violation->citation_ticket_photo)
                 <div class="photo-item" title="Citation Ticket">
-                    <img src="{{ asset('storage/' . $violation->citation_ticket_photo) }}" alt="Citation Ticket">
+                    <img src="{{ uploaded_file_url($violation->citation_ticket_photo) }}" alt="Citation Ticket">
                 </div>
             @endif
             @foreach($violation->vehiclePhotos as $p)
                 <div class="photo-item" title="Vehicle Photo">
-                    <img src="{{ asset('storage/' . $p->photo) }}" alt="Vehicle Photo">
+                    <img src="{{ uploaded_file_url($p->photo) }}" alt="Vehicle Photo">
                 </div>
             @endforeach
             @if($violation->receipt_photo)
                 <div class="photo-item" title="Receipt">
-                    <img src="{{ asset('storage/' . $violation->receipt_photo) }}" alt="Receipt">
+                    <img src="{{ uploaded_file_url($violation->receipt_photo) }}" alt="Receipt">
                 </div>
             @endif
         </div>

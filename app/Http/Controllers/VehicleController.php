@@ -77,7 +77,7 @@ class VehicleController extends Controller
 
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
-                $path = $file->store('vehicle-photos', 'public');
+                $path = $file->store('vehicle-photos', uploads_disk());
                 VehiclePhoto::create(['vehicle_id' => $vehicle->id, 'photo' => $path]);
             }
         }
@@ -121,7 +121,7 @@ class VehicleController extends Controller
             }
 
             foreach (array_slice($newFiles, 0, $allowed) as $file) {
-                $path = $file->store('vehicle-photos', 'public');
+                $path = $file->store('vehicle-photos', uploads_disk());
                 VehiclePhoto::create(['vehicle_id' => $vehicle->id, 'photo' => $path]);
             }
 
@@ -140,7 +140,7 @@ class VehicleController extends Controller
         $violatorId = $vehicle->violator_id;
 
         foreach ($vehicle->photos as $photo) {
-            Storage::disk('public')->delete($photo->photo);
+            Storage::disk(uploads_disk())->delete($photo->photo);
         }
         $vehicle->delete();
 

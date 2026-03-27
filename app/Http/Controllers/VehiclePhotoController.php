@@ -10,7 +10,7 @@ class VehiclePhotoController extends Controller
     public function destroy(VehiclePhoto $vehiclePhoto)
     {
         $vehicle = $vehiclePhoto->vehicle;
-        Storage::disk('public')->delete($vehiclePhoto->photo);
+        Storage::disk(uploads_disk())->delete($vehiclePhoto->photo);
         $vehiclePhoto->delete();
 
         return back()->with('success', 'Photo deleted.');

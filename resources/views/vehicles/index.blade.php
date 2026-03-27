@@ -93,7 +93,7 @@
                     {{-- Thumbnail --}}
                     <td style="padding-left:1.25rem;">
                         @if($vh->photos->isNotEmpty())
-                            <img src="{{ asset('storage/' . $vh->photos->first()->photo) }}"
+                            <img src="{{ uploaded_file_url($vh->photos->first()->photo) }}"
                                  alt="Vehicle photo"
                                  style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid #e7dfd5;">
                         @else

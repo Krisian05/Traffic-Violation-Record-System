@@ -38,8 +38,8 @@
             <div class="vlt-profile-body text-center">
                 <div class="vlt-photo-wrap mx-auto">
                     @if($violator->photo)
-                        @php $photoJson = json_encode([['src' => asset('storage/' . $violator->photo), 'caption' => $violator->full_name . ' — Profile Photo']]); @endphp
-                        <img src="{{ asset('storage/' . $violator->photo) }}"
+                        @php $photoJson = json_encode([['src' => uploaded_file_url($violator->photo), 'caption' => $violator->full_name . ' — Profile Photo']]); @endphp
+                        <img src="{{ uploaded_file_url($violator->photo) }}"
                              data-photos="{{ $photoJson }}"
                              onclick="openGallery(this, 0)"
                              style="width:100%;height:100%;object-fit:cover;cursor:zoom-in;"
@@ -308,7 +308,7 @@
                                     @if($v->photos->isNotEmpty())
                                         @php
                                             $allPhotos = $v->photos->map(fn($p) => [
-                                                'src'     => asset('storage/' . $p->photo),
+                                                'src'     => uploaded_file_url($p->photo),
                                                 'caption' => $v->plate_number,
                                             ])->values()->toJson();
                                             $extra = $v->photos->count() - 1;
@@ -316,7 +316,7 @@
                                         <div class="vlt-gallery-thumb"
                                              data-photos="{{ $allPhotos }}"
                                              onclick="openGallery(this, 0)">
-                                            <img src="{{ asset('storage/' . $v->photos->first()->photo) }}"
+                                            <img src="{{ uploaded_file_url($v->photos->first()->photo) }}"
                                                  style="width:64px;height:48px;object-fit:cover;border-radius:8px;border:2px solid #bfdbfe;"
                                                  alt="vehicle photo">
                                             @if($extra > 0)

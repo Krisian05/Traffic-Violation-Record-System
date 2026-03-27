@@ -8,9 +8,9 @@
 <div class="mob-profile-header">
     <div class="d-flex align-items-center gap-3">
         @if($violator->photo)
-            <img src="{{ asset('storage/' . $violator->photo) }}" alt="Photo"
+            <img src="{{ uploaded_file_url($violator->photo) }}" alt="Photo"
                  class="mob-photo-single"
-                 data-full="{{ asset('storage/' . $violator->photo) }}"
+                 data-full="{{ uploaded_file_url($violator->photo) }}"
                  style="width:64px;height:64px;border-radius:18px;object-fit:cover;border:3px solid rgba(255,255,255,.3);flex-shrink:0;cursor:zoom-in;">
         @else
             <div style="width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.6rem;font-weight:800;color:#fff;">
@@ -53,10 +53,10 @@
 <div class="mob-card">
     <div class="mob-section-title">ID Photo</div>
     <div class="mob-card-body pt-1 text-center">
-        <img src="{{ asset('storage/' . $violator->photo) }}"
+        <img src="{{ uploaded_file_url($violator->photo) }}"
              alt="Motorist Photo"
              class="mob-photo-single"
-             data-full="{{ asset('storage/' . $violator->photo) }}"
+             data-full="{{ uploaded_file_url($violator->photo) }}"
              style="max-width:100%;max-height:260px;object-fit:contain;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1);cursor:zoom-in;">
     </div>
 </div>

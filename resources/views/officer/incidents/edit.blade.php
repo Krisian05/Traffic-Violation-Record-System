@@ -98,7 +98,7 @@
             <div class="row g-2 mb-3">
                 @foreach($incident->media as $media)
                 <div class="col-4">
-                    <img src="{{ asset('storage/' . $media->file_path) }}"
+                    <img src="{{ uploaded_file_url($media->file_path) }}"
                          style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;"
                          alt="Scene photo">
                 </div>

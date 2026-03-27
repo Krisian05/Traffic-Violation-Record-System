@@ -109,7 +109,7 @@
 
             @if($violator->photo)
             <div class="d-flex align-items-center gap-3 mb-3 p-3" style="background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
-                <img src="{{ asset('storage/' . $violator->photo) }}" alt="Current photo"
+                <img src="{{ uploaded_file_url($violator->photo) }}" alt="Current photo"
                      style="width:52px;height:52px;border-radius:12px;object-fit:cover;flex-shrink:0;">
                 <div>
                     <div style="font-size:.75rem;font-weight:600;color:#0f172a;">Current photo</div>

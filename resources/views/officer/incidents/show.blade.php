@@ -128,10 +128,10 @@
             @foreach($incident->media as $m)
             @if($m->isImage())
             <div class="col-6">
-                <img src="{{ asset('storage/' . $m->file_path) }}"
+                <img src="{{ uploaded_file_url($m->file_path) }}"
                      alt="{{ $m->caption ?? 'Incident photo' }}"
                      class="mob-photo-thumb"
-                     data-full="{{ asset('storage/' . $m->file_path) }}"
+                     data-full="{{ uploaded_file_url($m->file_path) }}"
                      style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:zoom-in;">
             </div>
             @endif

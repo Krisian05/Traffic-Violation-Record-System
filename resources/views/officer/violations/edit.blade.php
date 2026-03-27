@@ -136,7 +136,7 @@
 
             @if($violation->citation_ticket_photo)
             <div class="mb-2 text-center">
-                <img src="{{ asset('storage/' . $violation->citation_ticket_photo) }}"
+                <img src="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
                      style="max-width:100%;max-height:160px;border-radius:10px;object-fit:cover;" alt="Citation Ticket">
                 <div style="font-size:.72rem;color:#64748b;margin-top:.3rem;">Current photo — upload below to replace</div>
             </div>

@@ -78,7 +78,7 @@ class OfficerController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('violators', 'public');
+            $data['photo'] = $request->file('photo')->store('violators', uploads_disk());
         }
 
         if (!empty($data['license_restriction']) && is_array($data['license_restriction'])) {
@@ -128,7 +128,7 @@ class OfficerController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('violators', 'public');
+            $data['photo'] = $request->file('photo')->store('violators', uploads_disk());
         }
 
         if (!empty($data['address'])) {
@@ -230,7 +230,7 @@ class OfficerController extends Controller
 
         if ($request->hasFile('citation_ticket_photo')) {
             $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')
-                ->store('citation-photos', 'public');
+                ->store('citation-photos', uploads_disk());
         }
 
         unset($data['photos']);
@@ -241,7 +241,7 @@ class OfficerController extends Controller
 
         if ($request->hasFile('photos')) {
             foreach (array_slice($request->file('photos'), 0, 4) as $file) {
-                $path = $file->store('violation-vehicle-photos', 'public');
+                $path = $file->store('violation-vehicle-photos', uploads_disk());
                 ViolationVehiclePhoto::create(['violation_id' => $violation->id, 'photo' => $path]);
             }
         }
@@ -288,9 +288,9 @@ class OfficerController extends Controller
 
         if ($request->hasFile('citation_ticket_photo')) {
             if ($violation->citation_ticket_photo) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($violation->citation_ticket_photo);
+                \Illuminate\Support\Facades\Storage::disk(uploads_disk())->delete($violation->citation_ticket_photo);
             }
-            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-photos', 'public');
+            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-photos', uploads_disk());
         }
 
         $violation->update($data);
@@ -396,7 +396,7 @@ class OfficerController extends Controller
 
             if ($request->hasFile('incident_photos')) {
                 foreach (array_slice($request->file('incident_photos'), 0, 6) as $file) {
-                    $path = $file->store('incident-photos', 'public');
+                    $path = $file->store('incident-photos', uploads_disk());
                     IncidentMedia::create([
                         'incident_id' => $incident->id,
                         'file_path'   => $path,
@@ -539,7 +539,7 @@ class OfficerController extends Controller
 
         if ($request->hasFile('incident_photos')) {
             foreach (array_slice($request->file('incident_photos'), 0, 6) as $file) {
-                $path = $file->store('incident-photos', 'public');
+                $path = $file->store('incident-photos', uploads_disk());
                 IncidentMedia::create([
                     'incident_id' => $incident->id,
                     'file_path'   => $path,

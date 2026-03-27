@@ -124,9 +124,9 @@
                     <div class="d-flex align-items-start gap-3 px-4 py-3" style="border-bottom:1px solid #f5f0e8;">
                         <div style="width:120px;flex-shrink:0;font-size:.8rem;color:#a8a29e;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;">Citation Ticket</div>
                         <div>
-                            <img src="{{ Storage::url($violation->citation_ticket_photo) }}"
+                            <img src="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
                                  alt="Citation ticket"
-                                 data-lightbox="{{ Storage::url($violation->citation_ticket_photo) }}"
+                                 data-lightbox="{{ uploaded_file_url($violation->citation_ticket_photo) }}"
                                  data-caption="Citation Ticket — Violation #{{ $violation->id }}"
                                  style="max-width:260px;max-height:200px;object-fit:contain;border-radius:8px;border:2px solid #fcd34d;cursor:zoom-in;transition:transform .15s;"
                                  onmouseover="this.style.transform='scale(1.02)'"
@@ -252,9 +252,9 @@
                             <div>
                                 <div class="d-flex flex-wrap gap-2">
                                     @foreach($violation->vehiclePhotos as $photo)
-                                    <img src="{{ asset('storage/' . $photo->photo) }}"
+                                    <img src="{{ uploaded_file_url($photo->photo) }}"
                                          alt="Vehicle photo"
-                                         data-lightbox="{{ asset('storage/' . $photo->photo) }}"
+                                         data-lightbox="{{ uploaded_file_url($photo->photo) }}"
                                          data-caption="Violation #{{ $violation->id }} — Vehicle Photo"
                                          style="height:100px;width:140px;object-fit:cover;border-radius:8px;border:2px solid #fde68a;cursor:pointer;transition:transform .15s;"
                                          onmouseover="this.style.transform='scale(1.03)'"
@@ -370,8 +370,8 @@
                     @if($violation->receipt_photo)
                     <li class="border-top pt-2 mt-1" style="border-color:#ede8df!important;">
                         <span style="color:#a8a29e;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;font-weight:700;display:block;">Receipt Photo</span>
-                        <img src="{{ asset('storage/' . $violation->receipt_photo) }}" alt="Receipt"
-                             data-lightbox="{{ asset('storage/' . $violation->receipt_photo) }}"
+                        <img src="{{ uploaded_file_url($violation->receipt_photo) }}" alt="Receipt"
+                             data-lightbox="{{ uploaded_file_url($violation->receipt_photo) }}"
                              data-caption="Receipt — {{ $violation->or_number }}"
                              style="max-width:100%;max-height:160px;object-fit:contain;border-radius:8px;border:1px solid #bbf7d0;cursor:pointer;margin-top:4px;display:block;">
                     </li>

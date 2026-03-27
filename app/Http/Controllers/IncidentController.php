@@ -126,11 +126,11 @@ class IncidentController extends Controller
                     $photoFiles = $vehiclePhotos[$i];
                     foreach (array_slice($photoFiles, 0, 4) as $photo) {
                         if ($photo && $photo->isValid()) {
-                            $vehiclePathArr[] = $photo->store('motorist-photos', 'public');
+                            $vehiclePathArr[] = $photo->store('motorist-photos', uploads_disk());
                         }
                     }
                 }
-                $idPhotoPath = !empty($motoristIdPhotos[$i]) ? $motoristIdPhotos[$i]->store('motorist-id-photos', 'public') : null;
+                $idPhotoPath = !empty($motoristIdPhotos[$i]) ? $motoristIdPhotos[$i]->store('motorist-id-photos', uploads_disk()) : null;
                 // Auto-register manual motorist (and vehicle) into the Violators table
                 if (empty($m['violator_id']) && !empty($m['motorist_name'])) {
                     [$m['violator_id'], $m['vehicle_id']] = $this->autoRegisterMotorist($m);
@@ -166,7 +166,7 @@ class IncidentController extends Controller
                 $captions   = $request->input('captions', []);
 
                 foreach ($request->file('media') as $i => $file) {
-                    $path = $file->store('incident-media', 'public');
+                    $path = $file->store('incident-media', uploads_disk());
                     $incident->media()->create([
                         'file_path'  => $path,
                         'media_type' => $mediaTypes[$i] ?? 'scene',
@@ -263,12 +263,12 @@ class IncidentController extends Controller
             // Delete removed motorists and their associated files
             $incident->motorists()->whereNotIn('id', $submittedIds)->each(function (IncidentMotorist $m) {
                 foreach ($m->vehicle_photo ?? [] as $path) {
-                    if (!Storage::disk('public')->delete($path)) {
+                    if (!Storage::disk(uploads_disk())->delete($path)) {
                         Log::warning("Failed to delete vehicle photo: {$path}");
                     }
                 }
                 if ($m->motorist_photo) {
-                    if (!Storage::disk('public')->delete($m->motorist_photo)) {
+                    if (!Storage::disk(uploads_disk())->delete($m->motorist_photo)) {
                         Log::warning("Failed to delete motorist photo: {$m->motorist_photo}");
                     }
                 }
@@ -288,7 +288,7 @@ class IncidentController extends Controller
                     $remaining  = max(0, 4 - count($existingVehiclePhotos));
                     foreach (array_slice($photoFiles, 0, $remaining) as $photo) {
                         if ($photo && $photo->isValid()) {
-                            $newVehiclePathArr[] = $photo->store('motorist-photos', 'public');
+                            $newVehiclePathArr[] = $photo->store('motorist-photos', uploads_disk());
                         }
                     }
                 }
@@ -296,7 +296,7 @@ class IncidentController extends Controller
 
                 // Motorist ID photo
                 if (!empty($motoristIdPhotos[$i])) {
-                    $idPhotoPath = $motoristIdPhotos[$i]->store('motorist-id-photos', 'public');
+                    $idPhotoPath = $motoristIdPhotos[$i]->store('motorist-id-photos', uploads_disk());
                 } else {
                     $idPhotoPath = !empty($m['existing_motorist_photo']) ? $m['existing_motorist_photo'] : null;
                 }
@@ -341,13 +341,13 @@ class IncidentController extends Controller
                         }
                         // Delete vehicle photos that were removed by user
                         foreach (array_diff($motorist->vehicle_photo ?? [], $existingVehiclePhotos) as $orphan) {
-                            if (!Storage::disk('public')->delete($orphan)) {
+                            if (!Storage::disk(uploads_disk())->delete($orphan)) {
                                 Log::warning("Failed to delete orphaned vehicle photo: {$orphan}");
                             }
                         }
                         // Delete old ID photo if a new one was uploaded
                         if (!empty($motoristIdPhotos[$i]) && $motorist->motorist_photo && $motorist->motorist_photo !== $idPhotoPath) {
-                            Storage::disk('public')->delete($motorist->motorist_photo);
+                            Storage::disk(uploads_disk())->delete($motorist->motorist_photo);
                         }
                         $motorist->update($motoristData);
                     } else {
@@ -371,7 +371,7 @@ class IncidentController extends Controller
                 $captions   = $request->input('captions', []);
 
                 foreach ($request->file('media') as $i => $file) {
-                    $path = $file->store('incident-media', 'public');
+                    $path = $file->store('incident-media', uploads_disk());
                     $incident->media()->create([
                         'file_path'  => $path,
                         'media_type' => $mediaTypes[$i] ?? 'scene',
@@ -389,18 +389,18 @@ class IncidentController extends Controller
     {
         $this->authorize('delete', $incident);
         foreach ($incident->media as $media) {
-            if (!Storage::disk('public')->delete($media->file_path)) {
+            if (!Storage::disk(uploads_disk())->delete($media->file_path)) {
                 Log::warning("Failed to delete incident media: {$media->file_path}");
             }
         }
         foreach ($incident->motorists as $motorist) {
             foreach ($motorist->vehicle_photo ?? [] as $path) {
-                if (!Storage::disk('public')->delete($path)) {
+                if (!Storage::disk(uploads_disk())->delete($path)) {
                     Log::warning("Failed to delete vehicle photo: {$path}");
                 }
             }
             if ($motorist->motorist_photo) {
-                if (!Storage::disk('public')->delete($motorist->motorist_photo)) {
+                if (!Storage::disk(uploads_disk())->delete($motorist->motorist_photo)) {
                     Log::warning("Failed to delete motorist photo: {$motorist->motorist_photo}");
                 }
             }
@@ -416,7 +416,7 @@ class IncidentController extends Controller
         $this->authorize('deleteMedia', $media->incident);
         $incidentId = $media->incident_id;
 
-        if (!Storage::disk('public')->delete($media->file_path)) {
+        if (!Storage::disk(uploads_disk())->delete($media->file_path)) {
             Log::warning("Failed to delete incident media file: {$media->file_path}");
         }
         $media->delete();

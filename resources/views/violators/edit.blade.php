@@ -45,7 +45,7 @@
                     <div id="photoPreview" class="rounded border d-flex align-items-center justify-content-center"
                          style="width:110px;height:130px;background:#eff6ff;border-color:#bfdbfe!important;overflow:hidden;">
                         @if($violator->photo)
-                            <img src="{{ asset('storage/' . $violator->photo) }}"
+                            <img src="{{ uploaded_file_url($violator->photo) }}"
                                  style="width:110px;height:130px;object-fit:cover;">
                         @else
                             <i class="bi bi-person-fill fs-1 text-muted"></i>

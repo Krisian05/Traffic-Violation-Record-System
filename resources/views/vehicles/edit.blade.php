@@ -40,8 +40,8 @@
         <div class="d-flex flex-wrap gap-2">
             @foreach($vehicle->photos as $photo)
             <div class="position-relative">
-                <img src="{{ asset('storage/' . $photo->photo) }}"
-                    data-lightbox="{{ asset('storage/' . $photo->photo) }}"
+                <img src="{{ uploaded_file_url($photo->photo) }}"
+                    data-lightbox="{{ uploaded_file_url($photo->photo) }}"
                     data-caption="{{ $vehicle->plate_number }}"
                     style="height:110px;width:150px;object-fit:cover;border-radius:8px;border:2px solid #bfdbfe;cursor:pointer;"
                     alt="vehicle photo">

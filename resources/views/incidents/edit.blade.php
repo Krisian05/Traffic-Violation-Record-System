@@ -221,7 +221,7 @@
                     <div class="col-md-3 col-sm-4 col-6">
                         <div class="border rounded overflow-hidden" style="font-size:.75rem;">
                             @if($media->isImage())
-                                <img src="{{ Storage::url($media->file_path) }}" class="w-100"
+                                <img src="{{ uploaded_file_url($media->file_path) }}" class="w-100"
                                     style="height:80px;object-fit:cover;display:block;" alt="">
                             @else
                                 <div class="d-flex align-items-center justify-content-center bg-light" style="height:80px;">

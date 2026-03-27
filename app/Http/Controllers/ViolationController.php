@@ -128,7 +128,7 @@ class ViolationController extends Controller
         }
 
         if ($request->hasFile('citation_ticket_photo')) {
-            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-tickets', 'public');
+            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-tickets', uploads_disk());
         }
 
         unset($data['photos']);
@@ -140,7 +140,7 @@ class ViolationController extends Controller
         // Save photos only for manual vehicle entry
         if ($request->hasFile('photos') && empty($request->input('vehicle_id'))) {
             foreach (\array_slice($request->file('photos'), 0, 4) as $file) {
-                $path = $file->store('violation-vehicle-photos', 'public');
+                $path = $file->store('violation-vehicle-photos', uploads_disk());
                 ViolationVehiclePhoto::create(['violation_id' => $violation->id, 'photo' => $path]);
             }
         }
@@ -210,7 +210,7 @@ class ViolationController extends Controller
             $data['or_number']    = null;
             $data['cashier_name'] = null;
             if ($violation->receipt_photo) {
-                Storage::disk('public')->delete($violation->receipt_photo);
+                Storage::disk(uploads_disk())->delete($violation->receipt_photo);
             }
             $data['receipt_photo'] = null;
         }
@@ -220,14 +220,14 @@ class ViolationController extends Controller
         // Citation ticket photo: replace or remove
         if ($request->boolean('remove_citation_photo') && !$request->hasFile('citation_ticket_photo')) {
             if ($violation->citation_ticket_photo) {
-                Storage::disk('public')->delete($violation->citation_ticket_photo);
+                Storage::disk(uploads_disk())->delete($violation->citation_ticket_photo);
             }
             $data['citation_ticket_photo'] = null;
         } elseif ($request->hasFile('citation_ticket_photo')) {
             if ($violation->citation_ticket_photo) {
-                Storage::disk('public')->delete($violation->citation_ticket_photo);
+                Storage::disk(uploads_disk())->delete($violation->citation_ticket_photo);
             }
-            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-tickets', 'public');
+            $data['citation_ticket_photo'] = $request->file('citation_ticket_photo')->store('citation-tickets', uploads_disk());
         } else {
             unset($data['citation_ticket_photo']);
         }
@@ -236,14 +236,14 @@ class ViolationController extends Controller
         if ($data['status'] === 'settled') {
             if ($request->boolean('remove_receipt_photo') && !$request->hasFile('receipt_photo')) {
                 if ($violation->receipt_photo) {
-                    Storage::disk('public')->delete($violation->receipt_photo);
+                    Storage::disk(uploads_disk())->delete($violation->receipt_photo);
                 }
                 $data['receipt_photo'] = null;
             } elseif ($request->hasFile('receipt_photo')) {
                 if ($violation->receipt_photo) {
-                    Storage::disk('public')->delete($violation->receipt_photo);
+                    Storage::disk(uploads_disk())->delete($violation->receipt_photo);
                 }
-                $data['receipt_photo'] = $request->file('receipt_photo')->store('receipt-photos', 'public');
+                $data['receipt_photo'] = $request->file('receipt_photo')->store('receipt-photos', uploads_disk());
             } else {
                 unset($data['receipt_photo']);
             }
@@ -252,7 +252,7 @@ class ViolationController extends Controller
         // If switching to a registered vehicle, clear all manual vehicle fields and delete all photos
         if (!empty($data['vehicle_id'])) {
             foreach ($violation->vehiclePhotos as $p) {
-                Storage::disk('public')->delete($p->photo);
+                Storage::disk(uploads_disk())->delete($p->photo);
             }
             $violation->vehiclePhotos()->delete();
 
@@ -292,7 +292,7 @@ class ViolationController extends Controller
 
             $newFiles = $request->file('photos');
             foreach (\array_slice($newFiles, 0, $allowed) as $file) {
-                $path = $file->store('violation-vehicle-photos', 'public');
+                $path = $file->store('violation-vehicle-photos', uploads_disk());
                 ViolationVehiclePhoto::create(['violation_id' => $violation->id, 'photo' => $path]);
             }
 
@@ -321,9 +321,9 @@ class ViolationController extends Controller
 
         if ($request->hasFile('receipt_photo')) {
             if ($violation->receipt_photo) {
-                Storage::disk('public')->delete($violation->receipt_photo);
+                Storage::disk(uploads_disk())->delete($violation->receipt_photo);
             }
-            $data['receipt_photo'] = $request->file('receipt_photo')->store('receipt-photos', 'public');
+            $data['receipt_photo'] = $request->file('receipt_photo')->store('receipt-photos', uploads_disk());
         }
 
         $data['status']     = 'settled';
@@ -337,15 +337,15 @@ class ViolationController extends Controller
     {
         $this->authorize('delete', $violation);
         foreach ($violation->vehiclePhotos as $p) {
-            Storage::disk('public')->delete($p->photo);
+            Storage::disk(uploads_disk())->delete($p->photo);
         }
 
         if ($violation->citation_ticket_photo) {
-            Storage::disk('public')->delete($violation->citation_ticket_photo);
+            Storage::disk(uploads_disk())->delete($violation->citation_ticket_photo);
         }
 
         if ($violation->receipt_photo) {
-            Storage::disk('public')->delete($violation->receipt_photo);
+            Storage::disk(uploads_disk())->delete($violation->receipt_photo);
         }
 
         $violatorId = $violation->violator_id;
