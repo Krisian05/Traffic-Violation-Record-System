@@ -66,7 +66,7 @@ Important values:
 - `DB_DATABASE`
 - `DB_USERNAME`
 - `DB_PASSWORD`
-- `SESSION_DRIVER=database`
+- `PRODUCTION_SESSION_DRIVER=cookie`
 - `UPLOADS_DISK=s3`
 - `CACHE_STORE=file`
 - `QUEUE_CONNECTION=sync`
@@ -81,7 +81,8 @@ Why the session setting matters:
 - App Platform can run more than one web instance.
 - `SESSION_DRIVER=file` stores sessions separately on each instance.
 - That causes random or repeated `419 Page Expired` errors when requests land on different instances.
-- `SESSION_DRIVER=database` avoids that by sharing sessions through MySQL.
+- Cookie sessions are shared by the browser itself, so they work cleanly across multiple instances and do not depend on a `sessions` table.
+- This project now defaults production sessions to `cookie` unless you explicitly set `PRODUCTION_SESSION_DRIVER` to something else later.
 
 ## First Deployment Commands
 

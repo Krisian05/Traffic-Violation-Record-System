@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Str;
 
+$isProduction = env('APP_ENV') === 'production';
+
 return [
 
     /*
@@ -18,7 +20,9 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'database'),
+    'driver' => $isProduction
+        ? env('PRODUCTION_SESSION_DRIVER', 'cookie')
+        : env('SESSION_DRIVER', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +173,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', $isProduction),
 
     /*
     |--------------------------------------------------------------------------
