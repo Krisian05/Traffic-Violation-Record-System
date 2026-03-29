@@ -256,7 +256,7 @@ tbody tr:nth-child(even) { background: #f9fafb; }
 
     {{-- Footer --}}
     <div class="rpt-footer">
-        <span>Traffic Violation Record System — Generated {{ now()->format('Y-m-d H:i') }}</span>
+        <span>Traffic Violation Incident Record System — Generated {{ now()->format('Y-m-d H:i') }}</span>
         <span>{{ $incident->incident_number }}</span>
     </div>
 

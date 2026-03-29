@@ -6,13 +6,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TVRS Officer">
+    <meta name="apple-mobile-web-app-title" content="TVIRS Officer">
     <meta name="theme-color" content="#1d4ed8">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('images/Balamban.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Balamban.png') }}">
-    <title>@yield('title', 'TVRS Officer') — TVRS</title>
+    <title>@yield('title', 'TVIRS Officer') — TVIRS</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
@@ -497,7 +497,7 @@
                 <i class="ph-fill ph-house"></i>
             </a>
         @endif
-        <span class="mob-topbar-title">@yield('title', 'TVRS Officer')</span>
+        <span class="mob-topbar-title">@yield('title', 'TVIRS Officer')</span>
     </div>
 
     <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-inline">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Dashboard') — Traffic Violation Record System</title>
+    <title>@yield('title', 'Dashboard') — Traffic Violation Incident Record System</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('images/Balamban.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Balamban.png') }}">
@@ -769,7 +769,7 @@
     <div class="sidebar-brand">
         <img src="{{ asset('images/PNP.png') }}" alt="PNP Logo" class="sidebar-logo">
         <div>
-            <h6>Traffic Violation Record System</h6>
+            <h6>Traffic Violation Incident Record System</h6>
             <span>Traffic Monitoring &amp; Records Unit</span>
         </div>
     </div>

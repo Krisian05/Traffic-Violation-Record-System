@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Traffic Violation Record System</title>
+    <title>Traffic Violation Incident Record System</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('images/Balamban.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Balamban.png') }}">
@@ -323,7 +323,7 @@
             <img src="{{ asset('images/Balamban.png') }}" alt="PNP Logo"
                  style="width:60px;height:60px;object-fit:contain;flex-shrink:0;margin:-8px 0;">
             <div class="nav-brand-text">
-                Traffic Violation Record System
+                Traffic Violation Incident Record System
                 <span>Traffic Monitoring &amp; Records Unit</span>
             </div>
         </a>
@@ -428,7 +428,7 @@
 
     {{-- FOOTER --}}
     <footer class="site-footer">
-        &copy; {{ date('Y') }} Traffic Monitoring &amp; Records Unit — Traffic Violation Record System. All rights reserved.
+        &copy; {{ date('Y') }} Traffic Monitoring &amp; Records Unit — Traffic Violation Incident Record System. All rights reserved.
     </footer>
 
 </div>
@@ -444,7 +444,7 @@
                 <div class="w-100 text-center pt-3">
                     <img src="{{ asset('images/Balamban.png') }}" alt="PNP Logo"
                          style="width:80px;height:80px;object-fit:contain;margin-bottom:.5rem;">
-                    <h5 class="fw-bold mb-0" style="color:#1e293b;">Traffic Violation Record System</h5>
+                    <h5 class="fw-bold mb-0" style="color:#1e293b;">Traffic Violation Incident Record System</h5>
                     <p class="text-muted mb-0" style="font-size:.8rem;">Traffic Monitoring &amp; Records Unit</p>
                 </div>
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3"

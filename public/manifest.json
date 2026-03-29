@@ -1,7 +1,7 @@
 {
-  "name": "Traffic Violation Record System",
-  "short_name": "TVRS",
-  "description": "TMRU Traffic Violation Record System — Officer mobile app",
+  "name": "Traffic Violation Incident Record System",
+  "short_name": "TVIRS",
+  "description": "TMRU Traffic Violation Incident Record System — Officer mobile app",
   "start_url": "/officer/dashboard",
   "display": "standalone",
   "orientation": "portrait",

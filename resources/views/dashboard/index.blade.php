@@ -11,7 +11,7 @@
 <div class="dash-header-bar mb-3">
     <div class="dash-greeting">
         <span class="dash-greeting-text">Good {{ $grWord }}, <strong>{{ Auth::user()->name }}</strong> 👋</span>
-        <span class="dash-greeting-sub">{{ now()->format('l, F d, Y') }} &mdash; Traffic Violation Record System</span>
+        <span class="dash-greeting-sub">{{ now()->format('l, F d, Y') }} &mdash; Traffic Violation Incident Record System</span>
     </div>
     <div class="dash-header-right d-flex align-items-center gap-2 flex-wrap">
         @if(Auth::user()->isOperator())
