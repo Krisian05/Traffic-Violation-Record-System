@@ -26,10 +26,12 @@ class OfficerController extends Controller
     public function dashboard(): View
     {
         $motoristCount      = Violator::count();
+        $violationCount     = Violation::count();
+        $incidentCount      = Incident::count();
         $openIncidentCount  = Incident::where('status', 'open')->count();
         $overdueCount       = Violation::overdue()->count();
 
-        return view('officer.dashboard', compact('motoristCount', 'openIncidentCount', 'overdueCount'));
+        return view('officer.dashboard', compact('motoristCount', 'violationCount', 'incidentCount', 'openIncidentCount', 'overdueCount'));
     }
 
     // ─────────────────────────────────────────────

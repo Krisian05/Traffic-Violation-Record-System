@@ -227,12 +227,12 @@
             <div class="db-stat-lbl">Motorists</div>
         </div>
         <div class="db-stat-tile">
-            <div class="db-stat-num db-stat-num--amber">{{ $openIncidentCount }}</div>
-            <div class="db-stat-lbl">Open</div>
+            <div class="db-stat-num db-stat-num--amber">{{ $violationCount }}</div>
+            <div class="db-stat-lbl">Violations</div>
         </div>
-        <div class="db-stat-tile {{ $overdueCount > 0 ? 'db-stat-tile--red' : '' }}">
-            <div class="db-stat-num {{ $overdueCount > 0 ? 'db-stat-num--red' : 'db-stat-num--green' }}">{{ $overdueCount }}</div>
-            <div class="db-stat-lbl">Overdue</div>
+        <div class="db-stat-tile">
+            <div class="db-stat-num db-stat-num--green">{{ $incidentCount }}</div>
+            <div class="db-stat-lbl">Incidents</div>
         </div>
     </div>
 
