@@ -22,6 +22,9 @@
 .inc-media-other    { background:#f9fafb;color:#6b7280; }
 .inc-tag-reg   { display:inline-flex;align-items:center;gap:.2rem;background:#dcfce7;color:#15803d;border-radius:10px;font-size:.62rem;font-weight:700;padding:.12rem .45rem; }
 .inc-tag-unreg { display:inline-flex;align-items:center;gap:.2rem;background:#fef9c3;color:#92400e;border-radius:10px;font-size:.62rem;font-weight:700;padding:.12rem .45rem; }
+.inc-mot-sep   { border-bottom:1px solid #f1f5f9; }
+.inc-exp-expired { color:#dc2626; }
+.inc-exp-valid   { color:#334155; }
 </style>
 
 {{-- ── Incident Header ── --}}
@@ -98,7 +101,7 @@
         $vCR    = $m->vehicle ? $m->vehicle->cr_number    : ($m->vehicle_cr_number ?? null);
         $vCha   = $m->vehicle ? $m->vehicle->chassis_number : ($m->vehicle_chassis ?? null);
     @endphp
-    <div class="mob-list-item" style="cursor:default;align-items:flex-start;padding-top:.9rem;padding-bottom:.9rem;{{ !$loop->last ? 'border-bottom:1px solid #f1f5f9;' : '' }}">
+    <div class="mob-list-item {{ !$loop->last ? 'inc-mot-sep' : '' }}" style="cursor:default;align-items:flex-start;padding-top:.9rem;padding-bottom:.9rem;">
         {{-- Avatar --}}
         @if($m->violator?->photo)
             <img src="{{ uploaded_file_url($m->violator->photo) }}"
@@ -170,7 +173,7 @@
                 @php $exp = \Carbon\Carbon::parse($expDate); @endphp
                 <div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.15rem;">
                     <span style="color:#94a3b8;min-width:54px;">Expiry:</span>
-                    <span style="{{ $exp->isPast() ? 'color:#dc2626;' : 'color:#334155;' }}">{{ $exp->format('M d, Y') }}</span>
+                    <span class="{{ $exp->isPast() ? 'inc-exp-expired' : 'inc-exp-valid' }}">{{ $exp->format('M d, Y') }}</span>
                     @if($exp->isPast())
                         <span style="background:#fee2e2;color:#dc2626;border-radius:6px;padding:.05rem .3rem;font-size:.6rem;font-weight:700;">Expired</span>
                     @endif
