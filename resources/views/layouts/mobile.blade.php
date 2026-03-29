@@ -447,6 +447,25 @@
         }
         .mob-lightbox.open { opacity: 1; pointer-events: all; }
         #mob-logout-modal.open { display: flex !important; }
+        #mob-user-menu.open   { display: flex !important; }
+
+        /* ── User menu button ── */
+        .mob-user-btn {
+            display: inline-flex; align-items: center; gap: .4rem;
+            height: 36px; border-radius: 10px; border: none;
+            background: rgba(255,255,255,.15);
+            color: #fff; font-size: .78rem; font-weight: 700;
+            padding: 0 .65rem; cursor: pointer;
+            transition: background .15s; flex-shrink: 0; max-width: 150px;
+        }
+        .mob-user-btn:hover { background: rgba(255,255,255,.25); }
+        .mob-user-avatar {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(255,255,255,.25);
+            border: 1.5px solid rgba(255,255,255,.35);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .68rem; font-weight: 800; flex-shrink: 0;
+        }
         .mob-lightbox img {
             max-width: 100%;
             max-height: 90vh;
@@ -501,12 +520,13 @@
         <span class="mob-topbar-title">@yield('title', 'TVIRS Officer')</span>
     </div>
 
-    <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-inline">
-        @csrf
-        <button type="button" class="mob-logout-btn" title="Logout" onclick="document.getElementById('mob-logout-modal').classList.add('open')">
-            <i class="ph ph-sign-out"></i>
-        </button>
-    </form>
+    <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-none">@csrf</form>
+
+    <button type="button" class="mob-user-btn" onclick="document.getElementById('mob-user-menu').classList.add('open')">
+        <span class="mob-user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ explode(' ', Auth::user()->name)[0] }}</span>
+        <i class="ph ph-caret-down" style="font-size:.65rem;opacity:.75;flex-shrink:0;"></i>
+    </button>
 </header>
 
 {{-- PAGE CONTENT --}}
@@ -533,38 +553,78 @@
 <nav class="mob-bottom-nav">
     <a href="{{ route('officer.dashboard') }}"
        class="mob-nav-item {{ request()->routeIs('officer.dashboard') ? 'active' : '' }}">
-        <i class="ph-fill ph-house"></i>
+        <i class="ph-fill ph-house-simple"></i>
         <span>Home</span>
     </a>
     <a href="{{ route('officer.motorists.index') }}"
        class="mob-nav-item {{ request()->routeIs('officer.motorists.*') || request()->routeIs('officer.violations.*') ? 'active' : '' }}">
-        <i class="ph-fill ph-users"></i>
-        <span>Motorists</span>
+        <i class="ph-fill ph-identification-badge"></i>
+        <span>Violations</span>
     </a>
     <a href="{{ route('officer.incidents.index') }}"
        class="mob-nav-item {{ request()->routeIs('officer.incidents.*') ? 'active' : '' }}">
-        <i class="ph-fill ph-flag"></i>
+        <i class="ph-fill ph-siren"></i>
         <span>Incidents</span>
     </a>
 </nav>
 
+{{-- USER MENU PANEL --}}
+<div id="mob-user-menu" onclick="if(event.target===this)this.classList.remove('open')"
+     style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center;padding:1rem;">
+    <div style="background:#fff;border-radius:22px 22px 16px 16px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 -6px 40px rgba(0,0,0,.2);">
+
+        {{-- Profile header --}}
+        <div style="background:linear-gradient(160deg,#0f2167 0%,#1d4ed8 60%,#1e40af 100%);padding:1.3rem 1.25rem 1.1rem;">
+            <div style="display:flex;align-items:center;gap:.875rem;">
+                <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);border:2.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:#fff;flex-shrink:0;">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:1rem;font-weight:800;color:#fff;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ Auth::user()->name }}</div>
+                    <div style="font-size:.65rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:.2rem;">
+                        <i class="ph-fill ph-shield-check" style="font-size:.75rem;margin-right:.2rem;"></i>Traffic Officer
+                    </div>
+                </div>
+                <button onclick="document.getElementById('mob-user-menu').classList.remove('open')"
+                        style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                    <i class="ph ph-x" style="font-size:.9rem;"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Menu items --}}
+        <div style="padding:.875rem 1rem 1rem;">
+            <button onclick="document.getElementById('mob-user-menu').classList.remove('open');document.getElementById('mob-logout-modal').classList.add('open');"
+                    style="display:flex;align-items:center;gap:.75rem;width:100%;min-height:52px;border-radius:14px;background:#fff1f2;border:1.5px solid #fecdd3;color:#dc2626;font-weight:700;font-size:.9rem;cursor:pointer;padding:0 1rem;transition:background .15s;-webkit-tap-highlight-color:transparent;">
+                <div style="width:36px;height:36px;border-radius:10px;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="ph-fill ph-sign-out" style="font-size:1.1rem;color:#dc2626;"></i>
+                </div>
+                <span style="flex:1;text-align:left;">Log Out</span>
+                <i class="ph ph-caret-right" style="opacity:.4;font-size:.85rem;"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 {{-- LOGOUT CONFIRMATION MODAL --}}
 <div id="mob-logout-modal" onclick="if(event.target===this)this.classList.remove('open')"
-     style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.45);align-items:flex-end;justify-content:center;padding:1rem;">
-    <div style="background:#fff;border-radius:20px 20px 16px 16px;width:100%;max-width:420px;padding:1.5rem 1.25rem 1.25rem;box-shadow:0 -4px 32px rgba(0,0,0,.15);">
-        <div style="text-align:center;margin-bottom:1.1rem;">
-            <div style="width:52px;height:52px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
-                <i class="ph-fill ph-sign-out" style="font-size:1.4rem;color:#dc2626;"></i>
+     style="display:none;position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center;padding:1rem;">
+    <div style="background:#fff;border-radius:22px 22px 16px 16px;width:100%;max-width:420px;padding:1.5rem 1.25rem 1.25rem;box-shadow:0 -4px 32px rgba(0,0,0,.18);">
+        <div style="text-align:center;margin-bottom:1.25rem;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#fef2f2;border:2px solid #fecdd3;display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;">
+                <i class="ph-fill ph-sign-out" style="font-size:1.5rem;color:#dc2626;"></i>
             </div>
-            <div style="font-size:1rem;font-weight:800;color:#0f172a;">Log out?</div>
-            <div style="font-size:.82rem;color:#64748b;margin-top:.3rem;">You will be signed out of your account.</div>
+            <div style="font-size:1.05rem;font-weight:800;color:#0f172a;">Log out?</div>
+            <div style="font-size:.82rem;color:#64748b;margin-top:.35rem;">
+                <strong>{{ Auth::user()->name }}</strong> will be signed out.
+            </div>
         </div>
         <button onclick="document.getElementById('logout-form').submit()"
-                style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;min-height:46px;border-radius:12px;background:#dc2626;color:#fff;border:none;font-weight:800;font-size:.9rem;margin-bottom:.6rem;cursor:pointer;">
+                style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;min-height:48px;border-radius:14px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;border:none;font-weight:800;font-size:.9rem;margin-bottom:.6rem;cursor:pointer;box-shadow:0 4px 14px rgba(220,38,38,.35);">
             <i class="ph-bold ph-sign-out"></i> Yes, Log Out
         </button>
         <button onclick="document.getElementById('mob-logout-modal').classList.remove('open')"
-                style="display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border-radius:12px;background:#f1f5f9;color:#64748b;border:none;font-weight:700;font-size:.875rem;cursor:pointer;">
+                style="display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border-radius:14px;background:#f1f5f9;color:#64748b;border:none;font-weight:700;font-size:.875rem;cursor:pointer;">
             Cancel
         </button>
     </div>
