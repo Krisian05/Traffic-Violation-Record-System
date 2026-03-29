@@ -1,26 +1,414 @@
-﻿@extends('layouts.mobile')
+@extends('layouts.mobile')
 @section('title', 'Motorists')
 
 @section('content')
 
-{{-- ── Search ── --}}
-<form method="GET" action="{{ route('officer.motorists.index') }}" class="mb-3">
-    <div class="input-group" style="border-radius:12px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);">
-        <span class="input-group-text" style="background:#fff;border-color:#e2e8f0;border-right:none;padding-left:.875rem;">
-            <i class="ph ph-magnifying-glass" style="color:#94a3b8;"></i>
-        </span>
-        <input type="text" name="search" value="{{ $search }}"
-               class="form-control mob-input"
-               style="border-left:none;border-color:#e2e8f0;"
-               placeholder="Name or license number...">
-        <button class="btn" type="submit"
-                style="background:linear-gradient(135deg,#1d4ed8,#1e40af);color:#fff;border:none;padding:0 1rem;font-weight:700;font-size:.85rem;min-height:44px;">
-            Search
-        </button>
-    </div>
-</form>
+@php
+    $repeatCount = $violators->getCollection()->where('violations_count', '>=', 2)->count();
+@endphp
 
-{{-- ── List ── --}}
+<style>
+.mot-hero {
+    background: linear-gradient(160deg, #0f2167 0%, #1d4ed8 58%, #1e40af 100%);
+    border-radius: 22px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 36px rgba(15,33,103,.42);
+}
+.mot-hero::before {
+    content: '';
+    position: absolute;
+    top: -72px;
+    right: -44px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.07);
+}
+.mot-hero::after {
+    content: '';
+    position: absolute;
+    left: -24px;
+    bottom: -56px;
+    width: 138px;
+    height: 138px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.045);
+}
+.mot-hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 999px;
+    padding: .24rem .62rem;
+    color: rgba(255,255,255,.86);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+.mot-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .55rem;
+    margin-top: 1rem;
+}
+.mot-hero-stat {
+    background: rgba(255,255,255,.11);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 14px;
+    padding: .72rem .45rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+.mot-hero-stat-num {
+    font-size: 1.35rem;
+    line-height: 1;
+    font-weight: 800;
+    color: #fff;
+}
+.mot-hero-stat-lbl {
+    font-size: .55rem;
+    font-weight: 700;
+    color: rgba(255,255,255,.6);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-top: .2rem;
+}
+.mot-section-heading {
+    font-size: .6rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .65rem;
+}
+.mot-section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+.mot-search-wrap {
+    position: relative;
+    margin-bottom: 1rem;
+}
+.mot-search-shell {
+    background: #fff;
+    border: 1px solid rgba(15,23,42,.05);
+    border-radius: 18px;
+    padding: .72rem;
+    box-shadow: 0 6px 22px rgba(15,23,42,.07);
+}
+.mot-search-bar {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    background: #f8fafc;
+    border: 1px solid #dbe5f1;
+    border-radius: 16px;
+    padding: .2rem .22rem .2rem .8rem;
+}
+.mot-search-icon {
+    color: #64748b;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.mot-search-input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    min-height: 44px;
+    font-size: .92rem;
+    padding: 0 !important;
+}
+.mot-search-input::placeholder {
+    color: #94a3b8;
+}
+.mot-search-submit {
+    border: none;
+    border-radius: 14px;
+    min-height: 44px;
+    padding: 0 1rem;
+    font-size: .84rem;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg,#1d4ed8,#1e40af);
+    box-shadow: 0 6px 16px rgba(29,78,216,.25);
+    flex-shrink: 0;
+}
+.mot-search-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .6rem;
+    margin-top: .7rem;
+    flex-wrap: wrap;
+}
+.mot-search-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    padding: .24rem .62rem;
+    font-size: .68rem;
+    font-weight: 700;
+}
+.mot-search-count {
+    font-size: .72rem;
+    color: #64748b;
+    font-weight: 600;
+}
+.mot-search-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% - .15rem);
+    background: #fff;
+    border: 1px solid rgba(15,23,42,.06);
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(15,23,42,.13);
+    overflow: hidden;
+    z-index: 40;
+    display: none;
+}
+.mot-search-dropdown.open {
+    display: block;
+}
+.mot-suggest-item,
+.mot-suggest-empty {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .85rem .95rem;
+    text-decoration: none;
+}
+.mot-suggest-item {
+    color: inherit;
+    border-bottom: 1px solid #f1f5f9;
+}
+.mot-suggest-item:last-child {
+    border-bottom: none;
+}
+.mot-suggest-item:hover {
+    background: #f8fbff;
+}
+.mot-suggest-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#1d4ed8,#1e40af);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .88rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29,78,216,.22);
+}
+.mot-suggest-title {
+    font-size: .86rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+.mot-suggest-sub {
+    font-size: .7rem;
+    color: #64748b;
+    margin-top: .08rem;
+    line-height: 1.45;
+}
+.mot-suggest-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .2rem;
+    border-radius: 999px;
+    padding: .12rem .45rem;
+    font-size: .58rem;
+    font-weight: 800;
+    margin-top: .3rem;
+}
+.mot-suggest-tag--warn {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+.mot-suggest-tag--danger {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+.mot-suggest-vcount {
+    color: #1d4ed8;
+    font-size: .66rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-left: auto;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 999px;
+    padding: .16rem .46rem;
+}
+.mot-result-card {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    background: #fff;
+    border-radius: 18px;
+    padding: 1rem 1rem 1rem .95rem;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: .72rem;
+    border: 1px solid rgba(15,23,42,.045);
+    box-shadow: 0 3px 14px rgba(15,23,42,.06);
+    position: relative;
+    overflow: hidden;
+}
+.mot-result-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg,#1d4ed8,#1e40af);
+}
+.mot-result-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: linear-gradient(135deg,#1d4ed8,#1e40af);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 5px 16px rgba(29,78,216,.26);
+}
+.mot-result-name {
+    font-size: .92rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+}
+.mot-result-meta {
+    font-size: .72rem;
+    color: #64748b;
+    margin-top: .14rem;
+    line-height: 1.45;
+}
+.mot-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .22rem;
+    border-radius: 999px;
+    padding: .14rem .48rem;
+    font-size: .58rem;
+    font-weight: 800;
+    margin-top: .34rem;
+}
+.mot-status-tag--repeat {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+.mot-status-tag--recidivist {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+</style>
+
+<div class="mot-hero">
+    <div class="d-flex justify-content-between align-items-start gap-3" style="position:relative;z-index:1;">
+        <div style="flex:1;min-width:0;">
+            <div class="mot-hero-chip mb-2">
+                <i class="ph-fill ph-shield-check"></i>
+                Officer Records
+            </div>
+            <div style="font-size:1.15rem;font-weight:800;color:#fff;line-height:1.15;">
+                Motorist Lookup
+            </div>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.72);margin-top:.28rem;max-width:240px;">
+                Search motorists fast, check repeat offenders, and open profiles directly from the field.
+            </div>
+        </div>
+        <div style="width:50px;height:50px;border-radius:16px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="ph-fill ph-identification-card" style="font-size:1.45rem;color:#fff;"></i>
+        </div>
+    </div>
+
+    <div class="mot-hero-stats" style="position:relative;z-index:1;">
+        <div class="mot-hero-stat">
+            <div class="mot-hero-stat-num">{{ number_format($violators->total()) }}</div>
+            <div class="mot-hero-stat-lbl">Records</div>
+        </div>
+        <div class="mot-hero-stat">
+            <div class="mot-hero-stat-num">{{ $violators->count() }}</div>
+            <div class="mot-hero-stat-lbl">Showing</div>
+        </div>
+        <div class="mot-hero-stat">
+            <div class="mot-hero-stat-num">{{ $repeatCount }}</div>
+            <div class="mot-hero-stat-lbl">Repeats</div>
+        </div>
+    </div>
+</div>
+
+<div class="mot-section-heading">Quick Search</div>
+
+<div class="mot-search-wrap">
+    <form method="GET" action="{{ route('officer.motorists.index') }}" id="motoristSearchForm" class="mot-search-shell">
+        <div class="mot-search-bar">
+            <i class="ph ph-magnifying-glass mot-search-icon"></i>
+            <input
+                type="text"
+                name="search"
+                id="motoristSearchInput"
+                value="{{ $search }}"
+                class="form-control mot-search-input"
+                placeholder="Type name or license number..."
+                autocomplete="off"
+            >
+            <button class="mot-search-submit" type="submit">Search</button>
+        </div>
+
+        <div class="mot-search-meta">
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="mot-search-pill">
+                    <i class="ph ph-lightning"></i>
+                    Live suggestions
+                </span>
+                @if($search)
+                    <a href="{{ route('officer.motorists.index') }}" class="mot-search-pill" style="text-decoration:none;background:#fff1f2;color:#dc2626;border-color:#fecdd3;">
+                        <i class="ph ph-x-circle"></i>
+                        Clear “{{ $search }}”
+                    </a>
+                @endif
+            </div>
+
+            <div class="mot-search-count">
+                {{ $violators->total() }} motorist{{ $violators->total() !== 1 ? 's' : '' }} matched
+            </div>
+        </div>
+    </form>
+
+    <div id="motoristSearchDropdown" class="mot-search-dropdown"></div>
+</div>
+
+<div class="mot-section-heading">Motorist Records</div>
+
 @if($violators->isEmpty())
     <div class="mob-card">
         <div class="mob-empty">
@@ -28,46 +416,45 @@
             <div class="mob-empty-text">No motorists found</div>
             @if($search)
             <div class="mob-empty-sub">
-                <a href="{{ route('officer.motorists.index') }}" style="color:#1d4ed8;font-weight:600;">Clear search</a>
+                <a href="{{ route('officer.motorists.index') }}" style="color:#1d4ed8;font-weight:700;text-decoration:none;">Clear search</a>
             </div>
             @endif
         </div>
     </div>
 @else
-    <div class="mob-card mb-3">
-        @foreach($violators as $v)
-        <a href="{{ route('officer.motorists.show', $v) }}" class="mob-list-item">
-            <div style="width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#1d4ed8,#1e40af);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:.875rem;font-size:.95rem;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(29,78,216,.2);">
-                {{ strtoupper(substr($v->first_name, 0, 1)) }}
+    @foreach($violators as $v)
+    <a href="{{ route('officer.motorists.show', $v) }}" class="mot-result-card">
+        <div class="mot-result-avatar">
+            {{ strtoupper(substr($v->first_name, 0, 1) . substr($v->last_name, 0, 1)) }}
+        </div>
+        <div style="flex:1;min-width:0;">
+            <div class="mot-result-name">
+                {{ $v->last_name }}, {{ $v->first_name }}
+                @if($v->middle_name) {{ substr($v->middle_name, 0, 1) }}. @endif
             </div>
-            <div style="flex:1;min-width:0;">
-                <div style="font-size:.9rem;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                    {{ $v->last_name }}, {{ $v->first_name }}
-                    @if($v->middle_name) {{ substr($v->middle_name,0,1) }}. @endif
-                </div>
-                <div style="font-size:.72rem;color:#94a3b8;margin-top:.05rem;">
-                    @if($v->license_number)
-                        <i class="ph ph-identification-badge me-1"></i>{{ $v->license_number }}
-                    @else
-                        <span style="color:#c0cad8;">No license on file</span>
-                    @endif
-                    <span style="margin:0 .3rem;color:#dde1e7;">·</span>
-                    {{ $v->violations_count }} violation{{ $v->violations_count !== 1 ? 's' : '' }}
-                </div>
-                @if($v->violations_count >= 3)
-                    <span style="display:inline-flex;align-items:center;gap:.2rem;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;border-radius:20px;font-size:.6rem;font-weight:700;padding:.1rem .45rem;margin-top:.25rem;">
-                        <i class="ph-fill ph-fire" style="font-size:.65rem;"></i> Recidivist
-                    </span>
-                @elseif($v->violations_count == 2)
-                    <span style="display:inline-flex;align-items:center;gap:.2rem;background:#fffbeb;color:#92400e;border:1px solid #fcd34d;border-radius:20px;font-size:.6rem;font-weight:700;padding:.1rem .45rem;margin-top:.25rem;">
-                        <i class="ph-fill ph-shield-warning" style="font-size:.65rem;"></i> Repeat Offender
-                    </span>
+            <div class="mot-result-meta">
+                @if($v->license_number)
+                    <i class="ph ph-identification-badge me-1"></i>{{ $v->license_number }}
+                @else
+                    <span style="color:#94a3b8;">No license on file</span>
                 @endif
+                <span style="margin:0 .34rem;color:#cbd5e1;">·</span>
+                {{ $v->violations_count }} violation{{ $v->violations_count !== 1 ? 's' : '' }}
             </div>
-            <i class="ph ph-caret-right" style="color:#d6d3d1;font-size:.8rem;flex-shrink:0;margin-left:.5rem;"></i>
-        </a>
-        @endforeach
-    </div>
+
+            @if($v->violations_count >= 3)
+                <span class="mot-status-tag mot-status-tag--recidivist">
+                    <i class="ph-fill ph-fire"></i> Recidivist
+                </span>
+            @elseif($v->violations_count === 2)
+                <span class="mot-status-tag mot-status-tag--repeat">
+                    <i class="ph-fill ph-shield-warning"></i> Repeat Offender
+                </span>
+            @endif
+        </div>
+        <i class="ph ph-caret-right" style="color:#cbd5e1;font-size:.88rem;flex-shrink:0;"></i>
+    </a>
+    @endforeach
 
     @if($violators->hasPages())
     <div class="d-flex justify-content-center mb-4">
@@ -76,9 +463,116 @@
     @endif
 @endif
 
-{{-- FAB --}}
 <a href="{{ route('officer.motorists.create') }}" class="mob-fab" title="Add Motorist">
     <i class="ph-bold ph-plus"></i>
 </a>
 
 @endsection
+
+@push('scripts')
+<script>
+(() => {
+    const input = document.getElementById('motoristSearchInput');
+    const dropdown = document.getElementById('motoristSearchDropdown');
+    const url = '{{ route('officer.motorists.suggestions') }}';
+    let timer = null;
+    let controller = null;
+
+    const escapeHtml = (value) => String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    const hideDropdown = () => {
+        dropdown.classList.remove('open');
+        dropdown.innerHTML = '';
+    };
+
+    const renderSuggestions = (results) => {
+        if (!results.length) {
+            dropdown.innerHTML = `
+                <div class="mot-suggest-empty">
+                    <div class="mot-suggest-avatar"><i class="ph ph-magnifying-glass"></i></div>
+                    <div>
+                        <div class="mot-suggest-title">No motorists found</div>
+                        <div class="mot-suggest-sub">Try another name or license number.</div>
+                    </div>
+                </div>
+            `;
+            dropdown.classList.add('open');
+            return;
+        }
+
+        dropdown.innerHTML = results.map((item) => {
+            const statusTag = item.status
+                ? `<span class="mot-suggest-tag ${item.status === 'Recidivist' ? 'mot-suggest-tag--danger' : 'mot-suggest-tag--warn'}">
+                        <i class="ph-fill ${item.status === 'Recidivist' ? 'ph-fire' : 'ph-shield-warning'}"></i>
+                        ${escapeHtml(item.status)}
+                   </span>`
+                : '';
+
+            return `
+                <a href="${escapeHtml(item.url)}" class="mot-suggest-item">
+                    <div class="mot-suggest-avatar">${escapeHtml(item.initials)}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="mot-suggest-title">${escapeHtml(item.label)}</div>
+                        <div class="mot-suggest-sub">${escapeHtml(item.sub)}</div>
+                        ${statusTag}
+                    </div>
+                    <div class="mot-suggest-vcount">${escapeHtml(item.violations_count)} case${item.violations_count === 1 ? '' : 's'}</div>
+                </a>
+            `;
+        }).join('');
+
+        dropdown.classList.add('open');
+    };
+
+    const search = (query) => {
+        if (controller) controller.abort();
+        controller = new AbortController();
+
+        fetch(url + '?q=' + encodeURIComponent(query), {
+            headers: { 'Accept': 'application/json' },
+            signal: controller.signal,
+        })
+            .then((response) => response.ok ? response.json() : [])
+            .then((data) => renderSuggestions(Array.isArray(data) ? data : []))
+            .catch((error) => {
+                if (error.name !== 'AbortError') hideDropdown();
+            });
+    };
+
+    input.addEventListener('input', () => {
+        const query = input.value.trim();
+        clearTimeout(timer);
+
+        if (query.length < 2) {
+            hideDropdown();
+            return;
+        }
+
+        timer = setTimeout(() => search(query), 220);
+    });
+
+    input.addEventListener('focus', () => {
+        if (input.value.trim().length >= 2 && dropdown.innerHTML.trim() !== '') {
+            dropdown.classList.add('open');
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.mot-search-wrap')) {
+            hideDropdown();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hideDropdown();
+        }
+    });
+})();
+</script>
+@endpush

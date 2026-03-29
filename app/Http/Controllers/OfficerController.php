@@ -59,6 +59,54 @@ class OfficerController extends Controller
         return view('officer.motorists.index', compact('violators', 'search'));
     }
 
+    public function motoristSuggestions(Request $request)
+    {
+        $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $search = trim($request->input('q', ''));
+
+        if ($search === '') {
+            return response()->json([]);
+        }
+
+        $motorists = Violator::withCount('violations')
+            ->with(['vehicles' => fn($query) => $query->select('id', 'violator_id', 'plate_number')->limit(1)])
+            ->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('middle_name', 'like', "%{$search}%")
+                  ->orWhere('license_number', 'like', "%{$search}%");
+            })
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->limit(7)
+            ->get()
+            ->map(function (Violator $violator) {
+                $plate = $violator->vehicles->first()?->plate_number;
+                $status = $violator->violations_count >= 3
+                    ? 'Recidivist'
+                    : ($violator->violations_count === 2 ? 'Repeat Offender' : null);
+
+                return [
+                    'id' => $violator->id,
+                    'label' => $violator->last_name . ', ' . $violator->first_name,
+                    'sub' => collect([
+                        $violator->license_number ? 'License: ' . $violator->license_number : null,
+                        $plate ? 'Plate: ' . $plate : null,
+                    ])->filter()->implode(' · ') ?: 'No license or vehicle on file',
+                    'initials' => strtoupper(substr((string) $violator->first_name, 0, 1) . substr((string) $violator->last_name, 0, 1)),
+                    'violations_count' => $violator->violations_count,
+                    'status' => $status,
+                    'url' => route('officer.motorists.show', $violator),
+                ];
+            })
+            ->values();
+
+        return response()->json($motorists);
+    }
+
     public function createMotorist(): View
     {
         return view('officer.motorists.create');

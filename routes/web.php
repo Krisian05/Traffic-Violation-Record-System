@@ -136,6 +136,7 @@ Route::middleware('auth')->group(function () {
 
         // Motorists
         Route::get('/motorists', [OfficerController::class, 'motorists'])->name('motorists.index');
+        Route::get('/motorists/suggestions', [OfficerController::class, 'motoristSuggestions'])->name('motorists.suggestions');
         Route::get('/motorists/create', [OfficerController::class, 'createMotorist'])->name('motorists.create');
         Route::post('/motorists', [OfficerController::class, 'storeMotorist'])->name('motorists.store');
         Route::get('/motorists/{violator}', [OfficerController::class, 'showMotorist'])->name('motorists.show');
