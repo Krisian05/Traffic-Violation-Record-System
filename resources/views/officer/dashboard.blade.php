@@ -59,7 +59,7 @@
         <i class="ph-fill ph-identification-card"></i>
     </div>
     <div style="flex:1;min-width:0;">
-        <div style="font-size:.95rem;font-weight:800;color:#0f172a;">Motorists</div>
+        <div style="font-size:.95rem;font-weight:800;color:#0f172a;">Traffic Violation</div>
         <div style="font-size:.73rem;color:#94a3b8;margin-top:.1rem;">{{ $motoristCount }} registered record{{ $motoristCount !== 1 ? 's' : '' }}</div>
     </div>
     <i class="ph ph-caret-right" style="color:#d6d3d1;font-size:.85rem;flex-shrink:0;"></i>
@@ -70,7 +70,7 @@
         <i class="ph-fill ph-flag"></i>
     </div>
     <div style="flex:1;min-width:0;">
-        <div style="font-size:.95rem;font-weight:800;color:#0f172a;">Incidents</div>
+        <div style="font-size:.95rem;font-weight:800;color:#0f172a;">Traffic Incident</div>
         <div style="font-size:.73rem;color:#94a3b8;margin-top:.1rem;">{{ $openIncidentCount }} open case{{ $openIncidentCount !== 1 ? 's' : '' }}</div>
     </div>
     <i class="ph ph-caret-right" style="color:#d6d3d1;font-size:.85rem;flex-shrink:0;"></i>
