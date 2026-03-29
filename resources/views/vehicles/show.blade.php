@@ -22,6 +22,71 @@
 .viol-status-contested .viol-status-dot { background:#94a3b8; }
 .fw-600 { font-weight:600; }
 .fw-700 { font-weight:700; }
+.veh-user-card {
+    display:flex;
+    align-items:flex-start;
+    gap:.9rem;
+    padding:.95rem 1rem;
+    border:1px solid #ede8df;
+    border-radius:16px;
+    background:linear-gradient(135deg,#fff,#fafaf9);
+}
+.veh-user-avatar {
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#e0f2fe,#bae6fd);
+    color:#0369a1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:1rem;
+    flex-shrink:0;
+    overflow:hidden;
+    border:1.5px solid #bae6fd;
+}
+.veh-user-avatar img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.veh-user-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    border-radius:9999px;
+    padding:.18rem .55rem;
+    font-size:.68rem;
+    font-weight:700;
+    line-height:1;
+}
+.veh-user-badge--owner {
+    background:#ede9fe;
+    color:#6d28d9;
+    border:1px solid #ddd6fe;
+}
+.veh-user-badge--registered {
+    background:#ecfeff;
+    color:#0f766e;
+    border:1px solid #a5f3fc;
+}
+.veh-user-badge--manual {
+    background:#fffbeb;
+    color:#b45309;
+    border:1px solid #fde68a;
+}
+.veh-user-stat {
+    display:inline-flex;
+    align-items:center;
+    gap:.3rem;
+    font-size:.7rem;
+    font-weight:700;
+    color:#57534e;
+    background:#f5f5f4;
+    border-radius:9999px;
+    padding:.18rem .5rem;
+}
 </style>
 @endpush
 
@@ -279,21 +344,127 @@
                         </div>
                     </div>
                 </div>
-                @if($vehicle->violator->contact_number || $vehicle->violator->address)
+                @if($vehicle->violator->contact_number || $vehicle->violator->temporary_address || $vehicle->violator->permanent_address)
                 <div class="border-top pt-2" style="border-color:#ede8df!important;">
                     <ul class="mb-0 list-unstyled" style="font-size:.78rem;color:#57534e;line-height:1.9;">
                         @if($vehicle->violator->contact_number)
                         <li><i class="bi bi-telephone-fill me-2" style="color:#6d28d9;font-size:.7rem;"></i>{{ $vehicle->violator->contact_number }}</li>
                         @endif
-                        @if($vehicle->violator->address)
-                        <li><i class="bi bi-geo-alt-fill me-2" style="color:#6d28d9;font-size:.7rem;"></i>{{ $vehicle->violator->address }}</li>
+                        @if($vehicle->violator->temporary_address || $vehicle->violator->permanent_address)
+                        <li><i class="bi bi-geo-alt-fill me-2" style="color:#6d28d9;font-size:.7rem;"></i>{{ $vehicle->violator->temporary_address ?: $vehicle->violator->permanent_address }}</li>
                         @endif
                     </ul>
                 </div>
                 @endif
+                @elseif($vehicle->owner_name)
+                <div class="text-center py-2">
+                    <div class="fw-700" style="color:#1c1917;font-size:.92rem;">{{ $vehicle->owner_name }}</div>
+                    <div style="font-size:.78rem;color:#a8a29e;margin-top:.2rem;">Owner name recorded manually for this vehicle.</div>
+                </div>
                 @else
                 <p class="mb-0 text-center py-2" style="font-size:.85rem;color:#a8a29e;font-style:italic;">No owner on record.</p>
                 @endif
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header d-flex align-items-center gap-2 py-3">
+                <span class="rounded d-flex align-items-center justify-content-center"
+                      style="width:28px;height:28px;background:#e0f2fe;">
+                    <i class="bi bi-people-fill" style="font-size:.85rem;color:#0284c7;"></i>
+                </span>
+                <span class="fw-600" style="font-size:.925rem;color:#292524;">People Using This Vehicle</span>
+                <span class="ms-auto badge" style="background:#e0f2fe;color:#0369a1;font-size:.75rem;">
+                    {{ $vehicleUsers->count() }} {{ Str::plural('person', $vehicleUsers->count()) }}
+                </span>
+            </div>
+            <div class="card-body p-3">
+                @forelse($vehicleUsers as $user)
+                <div class="veh-user-card {{ !$loop->last ? 'mb-3' : '' }}">
+                    <div class="veh-user-avatar">
+                        @if(!empty($user['photo']))
+                            <img src="{{ uploaded_file_url($user['photo']) }}" alt="{{ $user['name'] }}">
+                        @else
+                            {{ strtoupper(substr($user['name'], 0, 1)) }}
+                        @endif
+                    </div>
+
+                    <div style="flex:1;min-width:0;">
+                        <div class="d-flex align-items-start justify-content-between gap-2 flex-wrap">
+                            <div style="min-width:0;">
+                                @if($user['violator'])
+                                <a href="{{ route('violators.show', $user['violator']) }}"
+                                   class="fw-700 text-decoration-none" style="color:#1c1917;font-size:.9rem;">
+                                    {{ $user['name'] }}
+                                </a>
+                                @else
+                                <div class="fw-700" style="color:#1c1917;font-size:.9rem;">{{ $user['name'] }}</div>
+                                @endif
+
+                                @if($user['license_number'])
+                                <div class="font-monospace" style="font-size:.72rem;color:#a8a29e;margin-top:2px;">
+                                    {{ $user['license_number'] }}
+                                </div>
+                                @endif
+                            </div>
+
+                            <div class="d-flex gap-2 flex-wrap justify-content-end">
+                                @if($user['is_owner'])
+                                <span class="veh-user-badge veh-user-badge--owner">
+                                    <i class="bi bi-key-fill" style="font-size:.62rem;"></i> Owner
+                                </span>
+                                @endif
+
+                                @if($user['is_registered'])
+                                <span class="veh-user-badge veh-user-badge--registered">
+                                    <i class="bi bi-patch-check-fill" style="font-size:.62rem;"></i> Registered
+                                </span>
+                                @else
+                                <span class="veh-user-badge veh-user-badge--manual">
+                                    <i class="bi bi-person-fill-exclamation" style="font-size:.62rem;"></i> Manual Record
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if($user['contact_number'] || $user['address'])
+                        <div style="font-size:.77rem;color:#57534e;line-height:1.7;margin-top:.35rem;">
+                            @if($user['contact_number'])
+                                <div><i class="bi bi-telephone-fill me-2" style="color:#0284c7;font-size:.7rem;"></i>{{ $user['contact_number'] }}</div>
+                            @endif
+                            @if($user['address'])
+                                <div><i class="bi bi-geo-alt-fill me-2" style="color:#0284c7;font-size:.7rem;"></i>{{ $user['address'] }}</div>
+                            @endif
+                        </div>
+                        @endif
+
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <span class="veh-user-stat">
+                                <i class="bi bi-shield-exclamation" style="color:#dc2626;"></i>
+                                {{ $user['violations_count'] }} {{ Str::plural('violation', $user['violations_count']) }}
+                            </span>
+                            <span class="veh-user-stat">
+                                <i class="bi bi-flag-fill" style="color:#0369a1;"></i>
+                                {{ $user['incidents_count'] }} {{ Str::plural('incident', $user['incidents_count']) }}
+                            </span>
+                        </div>
+
+                        @if($user['last_activity_label'])
+                        <div style="font-size:.72rem;color:#a8a29e;margin-top:.5rem;">
+                            <i class="bi bi-clock-history me-1"></i>{{ $user['last_activity_label'] }}
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @empty
+                <div class="text-center py-4">
+                    <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#7dd3fc;margin:0 auto .75rem;">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <p class="fw-600 mb-0" style="color:#57534e;font-size:.9rem;">No motorists linked yet</p>
+                    <p class="mb-0" style="font-size:.8rem;color:#a8a29e;">People will appear here once this vehicle is used in violations or incidents.</p>
+                </div>
+                @endforelse
             </div>
         </div>
 
