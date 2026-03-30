@@ -255,7 +255,7 @@
         {{-- Actions --}}
         <div class="inc-section-card">
             <div class="card-body d-flex flex-column gap-2" style="padding:1.1rem;">
-                <button type="submit" class="inc-submit-btn">
+                <button type="submit" class="inc-submit-btn" id="incidentSubmitBtn">
                     <i class="bi bi-flag-fill"></i> Save Incident
                 </button>
                 <a href="{{ route('incidents.index') }}"
@@ -642,7 +642,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('incident-form');
     form.addEventListener('input', function () { formDirty = true; });
     form.addEventListener('change', function () { formDirty = true; });
-    form.addEventListener('submit', function () { formDirty = false; });
+    form.addEventListener('submit', function () {
+        formDirty = false;
+        var btn = document.getElementById('incidentSubmitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Saving…';
+    });
     window.addEventListener('beforeunload', function (e) {
         if (formDirty) {
             e.preventDefault();

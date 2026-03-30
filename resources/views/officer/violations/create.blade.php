@@ -166,7 +166,7 @@
                 @error('notes')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
-            <button type="submit" class="mob-btn-primary mob-btn-danger mb-2">
+            <button type="submit" class="mob-btn-primary mob-btn-danger mb-2" id="violationSubmitBtn">
                 <i class="ph-bold ph-check"></i> Save Violation
             </button>
             <a href="{{ route('officer.motorists.show', $violator) }}" class="mob-btn-outline">
@@ -200,5 +200,12 @@ if (vehicleSelect && vehicleManual) {
         vehicleManual.style.display = this.value ? 'none' : '';
     });
 }
+
+// Double-submit protection
+document.getElementById('violationSubmitBtn').closest('form').addEventListener('submit', function () {
+    var btn = document.getElementById('violationSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ph ph-hourglass"></i> Saving…';
+});
 </script>
 @endpush

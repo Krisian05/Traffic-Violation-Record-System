@@ -73,7 +73,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('violations.update', $violation) }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('violations.update', $violation) }}" enctype="multipart/form-data" id="violationEditForm">
 @csrf @method('PUT')
 
 <div class="row g-4">
@@ -744,5 +744,12 @@
             document.getElementById('vehicle_owner_name').value = '';
         }
     }
+
+    // Double-submit protection
+    document.getElementById('violationEditForm').addEventListener('submit', function () {
+        var btn = this.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Saving…';
+    });
 </script>
 @endpush
