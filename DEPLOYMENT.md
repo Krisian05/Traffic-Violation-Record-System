@@ -103,6 +103,18 @@ php artisan view:cache
 
 Run `php artisan storage:link` only once unless the symlink is missing.
 
+## DigitalOcean App Platform
+
+The `digitalocean/init-app.sh` script is run as a **PRE_DEPLOY job** before each deployment. It runs migrations and caches config, then exits. The service starts Apache automatically via the PHP buildpack — do **not** add `exec heroku-php-apache2` to this script or it will hang forever and block every deployment.
+
+Required env vars to set in the DO console (not committed to git):
+
+- `APP_KEY` — generate with `php artisan key:generate --show` locally. Must be `base64:...` format.
+- `DEFAULT_ADMIN_PASSWORD` — the initial admin account password.
+- `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` — DigitalOcean Spaces credentials for file uploads.
+
+The `app.yaml` file is a **template**. The placeholder values (`REPLACE_WITH_REAL_*`) must be replaced in the DO App Platform console under **Settings → Environment Variables** before the app will function.
+
 ## Quick Go-Live Checklist
 
 - `.env` is set to production values
@@ -112,6 +124,7 @@ Run `php artisan storage:link` only once unless the symlink is missing.
 - `public/storage` link exists
 - `storage/` and `bootstrap/cache/` are writable
 - document root points to `public/`
+- `APP_KEY` is a real key (`base64:...`), not the placeholder
 
 ## Current Readiness Check
 

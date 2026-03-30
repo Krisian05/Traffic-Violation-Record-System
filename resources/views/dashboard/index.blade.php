@@ -571,9 +571,13 @@
                         @php $hrs = max(0, (int) now()->diffInHours($v->created_at) - 72); @endphp
                         <tr class="dash-pend-row dash-pend-overdue">
                             <td>
+                                @if($v->violator)
                                 <a href="{{ route('violators.show', $v->violator) }}" class="dash-pend-name">
                                     {{ $v->violator->full_name }}
                                 </a>
+                                @else
+                                <span class="dash-pend-name">{{ $v->vehicle_owner_name ?? '(Unknown)' }}</span>
+                                @endif
                             </td>
                             <td>
                                 <a href="{{ route('violations.index', ['type' => $v->violationType->id]) }}"
@@ -645,9 +649,13 @@
                         @php $hrs = (int) now()->diffInHours($v->created_at); @endphp
                         <tr class="dash-pend-row">
                             <td>
+                                @if($v->violator)
                                 <a href="{{ route('violators.show', $v->violator) }}" class="dash-pend-name">
                                     {{ $v->violator->full_name }}
                                 </a>
+                                @else
+                                <span class="dash-pend-name">{{ $v->vehicle_owner_name ?? '(Unknown)' }}</span>
+                                @endif
                             </td>
                             <td>
                                 <a href="{{ route('violations.index', ['type' => $v->violationType->id]) }}"
